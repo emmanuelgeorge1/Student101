@@ -7,30 +7,46 @@
 
 import XCTest
 @testable import Students101
+import CoreData
 
 class Students101Tests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    
+    var studentDataManger:CoreDataServices!
+    var formValidation:FormValidation!
+    
+    override func setUp() {
+        super.setUp()
+        studentDataManger = CoreDataServices()
+        formValidation = FormValidation()
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    var studentsFetched = [StudentInfo]()
+    func test_create_Students(){
+        let studentDict = ["firstName":"Emmanuel",
+                           "lastName":"george",
+                           "email":"1@2.com",
+                           "phone":"9876543210",
+                           "adress":"Arimbasdf",
+                           "course":"B.Tech",
+                           "dob":"20-05-1998",
+                           "blood":"B+"]
+        studentDataManger.saveStudentData(studentDict: studentDict )
+        studentsFetched = studentDataManger.getStudentsList()
+        //  XCTAssertNil(studentsFetched,"Nil")
+        XCTAssertNotNil(studentsFetched,"Saved New Student Details")
+        //        XCTAssertEqualDictionaries(first: studentDict as! [String : String], studentsFetched as! [String:String] )
+        
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    
+    //    func XCTAssertEqualDictionaries(first: [String:String], _ second: [String:String]) {
+    //
+    //        XCTAssert(first == second)
+    //    }
+    
+    func test_email_validation(){
+      //  let correctEmail = "1@2.com"
+        let incorrectEmail = "qwert"
+       let validEmail = formValidation.validateEmailId(emailID: incorrectEmail)
+      XCTAssertEqual(false, validEmail)
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
+    
 }
